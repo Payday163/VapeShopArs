@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMOKEVAULT | Premium Lounge Store</title>
+    <title>VAPE & TOBACCO PREMIUM STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@
     <header class="sticky top-0 z-40 glass-panel border-b border-gray-800/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <!-- Logo -->
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchViewMode('shop')">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('catalog')">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-brand-purple flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-brand-500/20">
                     <i class="fa-solid font-bold fa-cloud text-slate-950"></i>
                 </div>
@@ -85,19 +85,19 @@
 
             <!-- View Switcher & Cart Buttons -->
             <div class="flex items-center space-x-3">
-                <!-- Mode Toggle (Only visible if Admin Authorized) -->
-                <div id="admin-nav-group" class="hidden bg-gray-900/80 p-1 rounded-xl border border-gray-800 items-center">
+                <!-- Mode Toggle (Customer / Admin) -->
+                <div class="bg-gray-900/80 p-1 rounded-xl border border-gray-800 flex items-center">
                     <button id="btn-mode-shop" onclick="switchViewMode('shop')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-2 bg-brand-500 text-black shadow-md">
                         <i class="fa-solid fa-store"></i> <span class="hidden sm:inline">Магазин</span>
                     </button>
-                    <button id="btn-mode-admin" onclick="openAdminPanelWithAuth()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all flex items-center gap-2">
+                    <button id="btn-mode-admin" onclick="switchViewMode('admin')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all flex items-center gap-2">
                         <i class="fa-solid fa-user-shield"></i> <span class="hidden sm:inline">Админка</span>
                         <span id="admin-pending-badge" class="hidden w-2 h-2 rounded-full bg-amber-400"></span>
                     </button>
                 </div>
 
-                <!-- Telegram Bot Simulation Toggle Button (Admin Only) -->
-                <button id="tg-sim-btn" onclick="toggleTgBotModal()" class="hidden relative p-2.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-xl transition-all" title="Симулятор Telegram Бота">
+                <!-- Telegram Bot Simulation Toggle Button -->
+                <button onclick="toggleTgBotModal()" class="relative p-2.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-xl transition-all" title="Симулятор Telegram Бота">
                     <i class="fa-brands fa-telegram text-lg"></i>
                     <span id="tg-sim-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">1</span>
                 </button>
@@ -111,6 +111,7 @@
         </div>
     </header>
 
+    <!-- MAIN CONTENT CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
 
         <!-- ==================== SHOP VIEW ==================== -->
@@ -162,11 +163,8 @@
                     </h2>
                     <p class="text-gray-400 text-sm mt-1">Управление каталогом, заказами и реквизитами</p>
                 </div>
-                <div class="flex flex-wrap items-center gap-3">
-                    <button onclick="copyCustomerLink()" class="px-4 py-2 bg-blue-600/20 border border-blue-500/40 hover:bg-blue-600/30 text-blue-300 font-semibold text-xs rounded-xl transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-link"></i> Скопировать ссылку для покупателей
-                    </button>
-                    <button onclick="openAddProductModal()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-black font-bold text-xs rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-brand-500/10">
+                <div class="flex items-center gap-3">
+                    <button onclick="openAddProductModal()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-black font-bold text-sm rounded-xl transition-all flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> Добавить товар
                     </button>
                 </div>
@@ -181,7 +179,7 @@
                     Управление Товарами
                 </button>
                 <button id="admin-tab-btn-settings" onclick="switchAdminTab('settings')" class="pb-3 border-b-2 border-transparent text-gray-400 hover:text-white">
-                    Реквизиты, Пароль & Telegram
+                    Реквизиты и Telegram
                 </button>
             </div>
 
@@ -216,7 +214,7 @@
 
             <!-- ADMIN TAB: SETTINGS -->
             <div id="admin-sec-settings" class="hidden max-w-2xl bg-gray-900/60 p-6 rounded-2xl border border-gray-800 space-y-6">
-                <h3 class="text-lg font-bold text-white">Настройки реквизитов и безопасности</h3>
+                <h3 class="text-lg font-bold text-white">Настройки реквизитов и бота</h3>
                 
                 <div class="space-y-4">
                     <div>
@@ -232,11 +230,6 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-amber-400 mb-1"><i class="fa-solid fa-lock"></i> Пароль/PIN для входа в Админ-панель</label>
-                        <input type="password" id="setting-admin-pin" class="w-full p-2.5 bg-gray-950 border border-gray-800 rounded-xl text-sm text-white focus:border-brand-500 focus:outline-none" placeholder="По умолчанию: 1234">
-                    </div>
-
                     <div class="pt-4 border-t border-gray-800">
                         <h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
                             <i class="fa-brands fa-telegram text-blue-400"></i> Интеграция с Реальным Telegram Ботом (Опционально)
@@ -245,7 +238,7 @@
                         
                         <div class="space-y-3">
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Bot Token (из @BotFather)</label>
+                                <label class="block text-xs text-gray-400 mb-1"> Bot Token (из @BotFather)</label>
                                 <input type="text" id="setting-bot-token" class="w-full p-2.5 bg-gray-950 border border-gray-800 rounded-xl text-sm text-white focus:border-brand-500 focus:outline-none" placeholder="123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ">
                             </div>
                             <div>
@@ -270,26 +263,6 @@
     </footer>
 
     <!-- ==================== MODALS ==================== -->
-
-    <!-- ADMIN AUTH PIN MODAL -->
-    <div id="modal-admin-auth" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-brand-cardBg border border-gray-800 w-full max-w-sm rounded-2xl p-6 text-center space-y-4 relative shadow-2xl">
-            <div class="w-12 h-12 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-neon flex items-center justify-center mx-auto text-xl">
-                <i class="fa-solid fa-lock"></i>
-            </div>
-            <div>
-                <h3 class="text-lg font-bold text-white">Вход в Админ-панель</h3>
-                <p class="text-xs text-gray-400 mt-1">Введите PIN-код для подтверждения доступа</p>
-            </div>
-            <div>
-                <input type="password" id="admin-pin-input" onkeyup="if(event.key==='Enter') verifyAdminPin()" placeholder="Пароль (По умолчанию 1234)" class="w-full p-3 text-center tracking-widest text-lg font-mono bg-gray-950 border border-gray-800 rounded-xl text-white focus:border-brand-500 focus:outline-none">
-            </div>
-            <div class="flex gap-2">
-                <button onclick="closeAdminAuthModal()" class="w-1/2 py-2.5 bg-gray-800 text-gray-300 font-semibold text-xs rounded-xl">Отмена</button>
-                <button onclick="verifyAdminPin()" class="w-1/2 py-2.5 bg-brand-500 hover:bg-brand-600 text-black font-extrabold text-xs rounded-xl">Войти</button>
-            </div>
-        </div>
-    </div>
 
     <!-- CART MODAL -->
     <div id="modal-cart" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -521,7 +494,7 @@
                 category: 'Снюс / Табак',
                 price: 450,
                 image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=500&auto=format&fit=crop&q=60',
-                description: 'Классическая крепкая порционная белая суха сухая порция.',
+                description: 'Классическая крепкая порционная белая сухая порция.',
                 flavors: [
                     { name: 'Ультра Мята', count: 6 },
                     { name: 'Классический Табак', count: 2 }
@@ -532,7 +505,6 @@
         const DEFAULT_SETTINGS = {
             requisites: "Сбербанк / СБП: +7 (999) 000-00-00\nПолучатель: Иван И.",
             sellerTg: "smoke_vault_admin",
-            adminPin: "1234",
             botToken: "",
             chatId: ""
         };
@@ -547,7 +519,6 @@
         let currentSelectedFlavors = {}; // { prodId: flavorName }
         let currentCheckoutReceiptBase64 = '';
         let activeOrderIdForTracking = null;
-        let isAdminAuthenticated = false;
 
         window.onload = function() {
             saveToLocalStorage();
@@ -557,8 +528,6 @@
             renderAdminOrders();
             renderAdminProducts();
             loadSettingsForm();
-            checkAdminAccessFromUrl();
-            setupKeyboardHotkeys();
         };
 
         function saveToLocalStorage() {
@@ -566,87 +535,6 @@
             localStorage.setItem('sv_orders', JSON.stringify(orders));
             localStorage.setItem('sv_settings', JSON.stringify(settings));
             localStorage.setItem('sv_cart', JSON.stringify(cart));
-        }
-
-        // URL PARAMETER & AUTH ACCESS CHECK
-        function checkAdminAccessFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('admin') === 'true' || urlParams.get('mode') === 'admin') {
-                openAdminAuthModal();
-            }
-        }
-
-        function setupKeyboardHotkeys() {
-            // Secret Shortcut Ctrl + Shift + A to open admin login
-            document.addEventListener('keydown', function(e) {
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
-                    e.preventDefault();
-                    openAdminAuthModal();
-                }
-            });
-        }
-
-        function openAdminAuthModal() {
-            if (isAdminAuthenticated) {
-                switchViewMode('admin');
-                return;
-            }
-            document.getElementById('admin-pin-input').value = '';
-            document.getElementById('modal-admin-auth').classList.remove('hidden');
-        }
-
-        function closeAdminAuthModal() {
-            document.getElementById('modal-admin-auth').classList.add('hidden');
-        }
-
-        function verifyAdminPin() {
-            const enteredPin = document.getElementById('admin-pin-input').value.trim();
-            const correctPin = settings.adminPin || "1234";
-
-            if (enteredPin === correctPin) {
-                isAdminAuthenticated = true;
-                closeAdminAuthModal();
-                
-                // Show Admin Navigation Controls
-                document.getElementById('admin-nav-group').classList.remove('hidden');
-                document.getElementById('admin-nav-group').classList.add('flex');
-                document.getElementById('tg-sim-btn').classList.remove('hidden');
-
-                switchViewMode('admin');
-                showToast('Успешный вход в Админ-панель!', 'success');
-            } else {
-                showToast('Неверный PIN-код доступа!', 'error');
-            }
-        }
-
-        function copyCustomerLink() {
-            const baseUrl = window.location.origin + window.location.pathname;
-            
-            // Clipboard copy fallbacks
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(baseUrl).then(() => {
-                    showToast('Чистая ссылка для покупателей скопирована!', 'success');
-                }).catch(() => {
-                    fallbackCopyTextToClipboard(baseUrl);
-                });
-            } else {
-                fallbackCopyTextToClipboard(baseUrl);
-            }
-        }
-
-        function fallbackCopyTextToClipboard(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast('Чистая ссылка для покупателей скопирована!', 'success');
-            } catch (err) {
-                showToast('Ошибка копирования ссылки', 'error');
-            }
-            document.body.removeChild(textArea);
         }
 
         // NAVIGATION & TAB SWITCHING
@@ -662,22 +550,10 @@
                 shopBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-2 bg-brand-500 text-black shadow-md";
                 adminBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all flex items-center gap-2";
             } else {
-                if (!isAdminAuthenticated) {
-                    openAdminAuthModal();
-                    return;
-                }
                 shopView.classList.add('hidden');
                 adminView.classList.remove('hidden');
                 adminBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-2 bg-brand-500 text-black shadow-md";
                 shopBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all flex items-center gap-2";
-            }
-        }
-
-        function openAdminPanelWithAuth() {
-            if (!isAdminAuthenticated) {
-                openAdminAuthModal();
-            } else {
-                switchViewMode('admin');
             }
         }
 
@@ -1344,7 +1220,6 @@
         function loadSettingsForm() {
             document.getElementById('setting-requisites').value = settings.requisites || '';
             document.getElementById('setting-seller-tg').value = settings.sellerTg || '';
-            document.getElementById('setting-admin-pin').value = settings.adminPin || '1234';
             document.getElementById('setting-bot-token').value = settings.botToken || '';
             document.getElementById('setting-chat-id').value = settings.chatId || '';
         }
@@ -1352,7 +1227,6 @@
         function saveSettings() {
             settings.requisites = document.getElementById('setting-requisites').value.trim();
             settings.sellerTg = document.getElementById('setting-seller-tg').value.trim().replace('@', '');
-            settings.adminPin = document.getElementById('setting-admin-pin').value.trim() || '1234';
             settings.botToken = document.getElementById('setting-bot-token').value.trim();
             settings.chatId = document.getElementById('setting-chat-id').value.trim();
 
